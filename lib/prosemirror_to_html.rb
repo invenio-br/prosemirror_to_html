@@ -31,8 +31,31 @@ module ProsemirrorToHtml
   class Error < StandardError; end
 
   class Renderer
-    def initialize()
+    def initialize
+      @document = nil
+
       @storedMarks = []
+
+      @nodes = [
+        ProsemirrorToHtml::Nodes::Blockquote,
+        ProsemirrorToHtml::Nodes::BulletList,
+        # ProsemirrorToHtml::Nodes::CodeBlockWrapper,
+        ProsemirrorToHtml::Nodes::CodeBlock,
+        ProsemirrorToHtml::Nodes::HardBreak,
+        ProsemirrorToHtml::Nodes::Heading,
+        ProsemirrorToHtml::Nodes::HorizontalRule,
+        ProsemirrorToHtml::Nodes::Image,
+        ProsemirrorToHtml::Nodes::ListItem,
+        ProsemirrorToHtml::Nodes::OrderedList,
+        ProsemirrorToHtml::Nodes::Paragraph,
+        # ProsemirrorToHtml::Nodes::Text,
+        ProsemirrorToHtml::Nodes::Table,
+        ProsemirrorToHtml::Nodes::TableCell,
+        ProsemirrorToHtml::Nodes::TableHeader,
+        ProsemirrorToHtml::Nodes::TableRow,
+        ProsemirrorToHtml::Nodes::User
+      ]
+
       @marks = [
         ProsemirrorToHtml::Marks::Bold,
         ProsemirrorToHtml::Marks::Code,
@@ -42,21 +65,6 @@ module ProsemirrorToHtml
         ProsemirrorToHtml::Marks::Subscript,
         ProsemirrorToHtml::Marks::Superscript,
         ProsemirrorToHtml::Marks::Underline,
-      ]
-      @nodes = [
-        ProsemirrorToHtml::Nodes::Blockquote,
-        ProsemirrorToHtml::Nodes::BulletList,
-        ProsemirrorToHtml::Nodes::CodeBlockWrapper,
-        ProsemirrorToHtml::Nodes::CodeBlock,
-        ProsemirrorToHtml::Nodes::HardBreak,
-        ProsemirrorToHtml::Nodes::HorizontalRule,
-        ProsemirrorToHtml::Nodes::Heading,
-        ProsemirrorToHtml::Nodes::Image,
-        ProsemirrorToHtml::Nodes::ListItem,
-        ProsemirrorToHtml::Nodes::OrderedList,
-        ProsemirrorToHtml::Nodes::Paragraph,
-        # ProsemirrorToHtml::Nodes::Text,
-        ProsemirrorToHtml::Nodes::User
       ]
     end
 

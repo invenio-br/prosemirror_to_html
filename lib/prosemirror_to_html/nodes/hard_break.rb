@@ -1,12 +1,11 @@
 module ProsemirrorToHtml
   module Nodes
     class HardBreak < Node
-
       def matching
-        @node.type === 'hard_break'
+        @node.type == 'hard_break'
       end
 
-      def data
+      def tag
         'br'
       end
     end

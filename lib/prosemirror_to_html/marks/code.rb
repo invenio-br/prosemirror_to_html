@@ -1,9 +1,8 @@
 module ProsemirrorToHtml
   module Marks
     class Code < Mark
-
       def matching
-        @node.type === 'code'
+        @node.type == 'code'
       end
 
       def tag

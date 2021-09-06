@@ -1,12 +1,11 @@
 module ProsemirrorToHtml
   module Nodes
     class BulletList < Node
-
       def matching
-        @node.type === 'bullet_list'
+        @node.type == 'bullet_list'
       end
 
-      def data
+      def tag
         'ul'
       end
     end

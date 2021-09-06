@@ -1,12 +1,12 @@
 module ProsemirrorToHtml
   module Marks
-    class Italic < Mark
+    class Underline < Mark
       def matching
-        @node.type == 'italic'
+        @node.type == 'underline'
       end
 
       def tag
-        'em'
+        'u'
       end
     end
   end

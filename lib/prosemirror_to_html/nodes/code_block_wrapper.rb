@@ -2,7 +2,7 @@ module ProsemirrorToHtml
   module Nodes
     class CodeBlockWrapper < Node
       def matching
-        @node.name === 'pre'
+        @node.name == 'pre'
       end
 
       def data

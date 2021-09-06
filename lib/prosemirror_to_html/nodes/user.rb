@@ -1,9 +1,8 @@
 module ProsemirrorToHtml
   module Nodes
     class User < Node
-
       def matching
-        @node.natypeme === 'user'
+        @node.type == 'user'
       end
 
       def tag

@@ -1,9 +1,8 @@
 module ProsemirrorToHtml
   module Marks
     class Bold < Mark
-
       def matching
-        @node.type === 'bold'
+        @node.type == 'bold'
       end
 
       def tag

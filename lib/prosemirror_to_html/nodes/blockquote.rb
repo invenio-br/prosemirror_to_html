@@ -1,12 +1,12 @@
 module ProsemirrorToHtml
   module Nodes
-    class OrderedList < Node
+    class Blockquote < Node
       def matching
-        @node.type == 'ordered_list'
+        @node.type == 'blockquote'
       end
 
       def tag
-        'ol'
+        'blockquote'
       end
     end
   end

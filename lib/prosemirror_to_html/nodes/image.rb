@@ -1,9 +1,8 @@
 module ProsemirrorToHtml
   module Nodes
     class Image < Node
-
       def matching
-        @node.type === 'img'
+        @node.type == 'img'
       end
 
       def tag

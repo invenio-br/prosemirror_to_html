@@ -1,6 +1,5 @@
 module ProsemirrorToHtml
   module Nodes
-
     class Node
       attr_writer :wrapper
       attr_writer :type

@@ -1,9 +1,8 @@
 module ProsemirrorToHtml
   module Nodes
     class Paragraph < Node
-
       def matching
-        @node.type === 'paragraph'
+        @node.type == 'paragraph'
       end
 
       def tag

@@ -8,13 +8,13 @@ Gem::Specification.new do |spec|
   spec.version       = ProsemirrorToHtml::VERSION
   spec.authors       = ["Brian Kimball"]
   spec.email         = ["bvkimball@gmail.com"]
-  
+
   spec.summary       = %q{Takes ProseMirror compatible JSON and outputs HTML.}
   spec.description   = %q{Takes ProseMirror compatible JSON and outputs HTML.}
   spec.homepage      = "https://github.com/inputhq/prosemirror_to_html"
   spec.license       = "MIT"
 
-  
+
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
   # if spec.respond_to?(:metadata)
@@ -37,8 +37,8 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "bundler", "~> 2.0.1"
-  spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency "bundler", "~> 2.1.4"
+  spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "yard"
   spec.add_dependency "nokogiri"

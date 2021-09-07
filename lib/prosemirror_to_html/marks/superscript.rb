@@ -1,13 +1,8 @@
 module ProsemirrorToHtml
   module Marks
     class Superscript < Mark
-      def matching
-        @node.type == 'superscript'
-      end
-
-      def tag
-        'sup'
-      end
+      @mark_type = 'superscript'
+      @tag_name = 'sup'
     end
   end
 end

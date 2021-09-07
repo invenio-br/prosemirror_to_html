@@ -1,12 +1,16 @@
 module ProsemirrorToHtml
   module Nodes
     class OrderedList < Node
-      def matching
-        @node.type == 'ordered_list'
-      end
+      @node_type = 'ordered_list'
+      @tag_name = 'ol'
 
       def tag
-        'ol'
+        [
+          {
+            tag: self.class.tag_name,
+            attrs: @node.attrs
+          }
+        ]
       end
     end
   end

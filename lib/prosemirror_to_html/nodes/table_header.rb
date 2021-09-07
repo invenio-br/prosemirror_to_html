@@ -1,13 +1,8 @@
 module ProsemirrorToHtml
   module Nodes
     class TableHeader < TableCell
-      def matching
-        @node.type == 'table_header'
-      end
-
-      def tag
-        'th'
-      end
+      @node_type = 'table_header'
+      @tag_name = 'th'
 
       # TODO: support attrs
     end

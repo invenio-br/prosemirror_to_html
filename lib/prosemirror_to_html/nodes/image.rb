@@ -1,13 +1,20 @@
 module ProsemirrorToHtml
   module Nodes
     class Image < Node
-      def matching
-        @node.type == 'img'
-      end
+      @node_type = 'image'
+      @tag_name = 'img'
 
       def tag
-        # doc.img(:src => @node.attrs.src)
-        'img'
+        [
+          {
+            tag: self.class.tag_name,
+            attrs: @node.attrs
+          }
+        ]
+      end
+
+      def self_closing
+        true
       end
     end
   end

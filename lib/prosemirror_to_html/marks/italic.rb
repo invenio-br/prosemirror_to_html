@@ -1,13 +1,8 @@
 module ProsemirrorToHtml
   module Marks
     class Italic < Mark
-      def matching
-        @node.type == 'italic'
-      end
-
-      def tag
-        'em'
-      end
+      @mark_type = 'italic'
+      @tag_name = 'em'
     end
   end
 end

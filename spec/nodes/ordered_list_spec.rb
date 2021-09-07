@@ -33,7 +33,7 @@ RSpec.describe ProsemirrorToHtml::Nodes::OrderedList do
         {
           type: 'ordered_list',
           attrs: {
-            order: 3,
+            start: 3,
           },
           content: [
             {

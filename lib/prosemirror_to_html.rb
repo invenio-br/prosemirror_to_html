@@ -11,7 +11,6 @@ require "prosemirror_to_html/marks/underline"
 require "prosemirror_to_html/nodes/node"
 require "prosemirror_to_html/nodes/blockquote"
 require "prosemirror_to_html/nodes/bullet_list"
-require "prosemirror_to_html/nodes/code_block_wrapper"
 require "prosemirror_to_html/nodes/code_block"
 require "prosemirror_to_html/nodes/hard_break"
 require "prosemirror_to_html/nodes/horizontal_rule"
@@ -21,8 +20,9 @@ require "prosemirror_to_html/nodes/list_item"
 require "prosemirror_to_html/nodes/ordered_list"
 require "prosemirror_to_html/nodes/paragraph"
 require "prosemirror_to_html/nodes/table"
-require "prosemirror_to_html/nodes/text"
-require "prosemirror_to_html/nodes/user"
+require "prosemirror_to_html/nodes/table_cell"
+require "prosemirror_to_html/nodes/table_header"
+require "prosemirror_to_html/nodes/table_row"
 require 'nokogiri'
 require 'json'
 require "ostruct"
@@ -34,12 +34,9 @@ module ProsemirrorToHtml
     def initialize
       @document = nil
 
-      @storedMarks = []
-
       @nodes = [
         ProsemirrorToHtml::Nodes::Blockquote,
         ProsemirrorToHtml::Nodes::BulletList,
-        # ProsemirrorToHtml::Nodes::CodeBlockWrapper,
         ProsemirrorToHtml::Nodes::CodeBlock,
         ProsemirrorToHtml::Nodes::HardBreak,
         ProsemirrorToHtml::Nodes::Heading,
@@ -48,12 +45,10 @@ module ProsemirrorToHtml
         ProsemirrorToHtml::Nodes::ListItem,
         ProsemirrorToHtml::Nodes::OrderedList,
         ProsemirrorToHtml::Nodes::Paragraph,
-        # ProsemirrorToHtml::Nodes::Text,
         ProsemirrorToHtml::Nodes::Table,
         ProsemirrorToHtml::Nodes::TableCell,
         ProsemirrorToHtml::Nodes::TableHeader,
         ProsemirrorToHtml::Nodes::TableRow,
-        ProsemirrorToHtml::Nodes::User
       ]
 
       @marks = [
@@ -68,95 +63,223 @@ module ProsemirrorToHtml
       ]
     end
 
-    def render(input)
-      html = ""
+    def with_marks(marks = nil)
+      @marks = marks if marks.is_a? Array
 
-      json = case input
-             when Hash then input.to_json
-             when String then input
+      self
+    end
+
+    def with_nodes(nodes = nil)
+      @nodes = nodes if nodes.is_a? Array
+
+      self
+    end
+
+    def render(value)
+      json = case value
+             when Hash then value.to_json
+             when String then value
              else raise Error
              end
 
-      object = JSON.parse(json, object_class: OpenStruct)
+      @document = JSON.parse(json, object_class: OpenStruct)
 
-      object.content.each do |node|
-        html += renderNode(node)
+      html = ''
+
+      content = @document.content.is_a?(Array) ? @document.content : []
+
+      content.each_with_index do |node, index|
+        prev_node = content[index - 1]
+        next_node = content[index + 1]
+
+        html << render_node(node, prev_node, next_node)
       end
 
       html
     end
 
+    def add_node(node)
+      @nodes << node
+
+      self
+    end
+
+    def add_nodes(nodes)
+      @nodes.push nodes
+
+      self
+    end
+
+    def add_mark(mark)
+      @marks << mark
+
+      self
+    end
+
+    def add_marks(marks)
+      @marks.push marks
+
+      self
+    end
+
+    def replace_node(search_node, replace_node)
+      @nodes.each do |key, node_klass|
+        if node_klass == search_node
+          @nodes[key] = replace_node
+        end
+      end
+
+      self
+    end
+
+    def replace_mark(search_mark, replace_mark)
+      @marks.each do |key, mark_klass|
+        if mark_klass == search_mark
+          @marks[key] = replace_mark
+        end
+      end
+
+      self
+    end
+
     private
 
-    def renderNode(item)
-      html = []
-      if item.marks
-        item.marks.each do |m|
-          mark = get_matching_mark(m)
-          html.push(render_opening_tag(mark.tag)) if mark
+    def render_node(node, prev_node, next_node)
+      html = ''
+      render_klass = nil
+
+      if node&.marks
+        node.marks.each do |mark|
+          @marks.each do |klass|
+            render_klass = klass.new(mark)
+
+            if render_klass.matching && mark_should_open(mark, prev_node)
+              html << render_opening_tag(render_klass.tag)
+            end
+          end
         end
       end
 
-      node = get_matching_node(item)
-      html.push(render_opening_tag(node.tag)) if node
+      @nodes.each do |klass|
+        render_klass = klass.new(node)
 
-      if item.content
-        item.content.each do |content|
-          html.push(renderNode(content))
-        end
-      elsif item.text
-        html.push(item.text)
-      end
-
-      html.push(render_closing_tag(node.tag)) if node
-      if item.marks
-        item.marks.reverse.each do |m|
-          mark = get_matching_mark(m)
-          html.push(render_closing_tag(mark.tag)) if mark
+        if render_klass.matching
+          html << render_opening_tag(render_klass.tag)
+          break
         end
       end
-      return html.join("");
+
+      if node&.content
+        node.content.each_with_index do |nested_node, index|
+          prev_nested_node = node.content[index - 1]
+          next_nested_node = node.content[index + 1]
+
+          html << render_node(nested_node, prev_nested_node, next_nested_node)
+          prev_node = nested_node
+        end
+      elsif node&.text
+        html << CGI.escapeHTML(node.text)
+      elsif text = render_klass.text
+        html << text
+      end
+
+      @nodes.each do |klass|
+        render_klass = klass.new(node)
+
+        if render_klass.self_closing
+          next
+        end
+
+        if render_klass.matching
+          html << render_closing_tag(render_klass.tag)
+        end
+      end
+
+      if node&.marks
+        node.marks.reverse.each do |mark|
+          @marks.each do |klass|
+            render_klass = klass.new(mark)
+
+            if render_klass.matching && mark_should_close(mark, next_node)
+              html << render_closing_tag(render_klass.tag)
+            end
+          end
+        end
+      end
+
+      html
+    end
+
+    def mark_should_open(mark, prev_node)
+      node_has_mark(prev_node, mark)
+    end
+
+    def mark_should_close(mark, next_node)
+      node_has_mark(next_node, mark)
+    end
+
+    def node_has_mark(node, mark)
+      return true unless node
+      return true if node.respond_to?(:marks)
+
+      # Other node has same mark
+      node.marks&.each do |other_mark|
+        if mark == other_mark
+          return false
+        end
+      end
+
+      true
     end
 
     def render_opening_tag(tags)
-      return "<#{tags}>" if tags.is_a? String
-      all = tags.map do |tag|
-        return "<#{tags}>" if tag.is_a? String
-        h = "<#{tag[:tag]}"
-        tag[:attrs].to_h.each_pair { |key, value| h += " #{key}=\"#{value}\"" } if tag[:attrs]
-        "#{h}>"
-      end
-      return all.join('')
+      tags = array_wrap(tags)
+
+      return nil if tags.empty?
+
+      tags.map do |tag|
+        if tag.is_a? String
+          "<#{tag}>"
+        else
+          tag = OpenStruct.new(tag) unless tag.is_a?(OpenStruct)
+
+          attrs = ''
+          if tag&.attrs
+            tag.attrs.each_pair do |attr, value|
+              attrs << " #{attr}=\"#{value}\""
+            end
+          end
+
+          "<#{tag.tag}#{attrs}>"
+        end
+      end.join
     end
 
     def render_closing_tag(tags)
-      return "</#{tags}>" if tags.is_a? String
-      all = tags.reverse.map do |tag|
-        return "</#{tag}>" if tag.is_a? String
-        "</#{tag[:tag]}>"
-      end
-      return all.join('')
-    end
+      tags = array_wrap(tags).reverse
 
-    # Find which Node matches the Html Node
-    def get_matching_node(item)
-      return get_matching_class(item, @nodes)
-    end
+      return nil if tags.empty?
 
-    # Find which Mark matches the HtmlElement
-    def get_matching_mark(item)
-      return get_matching_class(item, @marks)
-    end
+      tags.map do |tag|
+        if tag.is_a? String
+          "</#{tag}>"
+        else
+          tag = OpenStruct.new(tag) unless tag.is_a?(OpenStruct)
 
-    # Find which class matches the HtmlElement
-    def get_matching_class(node, classes)
-      found = classes.select do |klass|
-        instance = klass.new(node)
-        if instance.matching
-          return instance
+          "</#{tag.tag}>"
         end
+      end.join
+    end
+
+    # From https://github.com/rails/rails/blob/5f3ff60084ab5d5921ca3499814e4697f8350ee7/activesupport/lib/active_support/core_ext/array/wrap.rb
+    def array_wrap(object)
+      if object.nil?
+        []
+      elsif object.respond_to?(:to_ary)
+        object.to_ary || [object]
+      else
+        [object]
       end
-      found.first
     end
   end
 end

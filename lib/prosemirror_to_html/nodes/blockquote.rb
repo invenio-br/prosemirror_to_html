@@ -1,13 +1,8 @@
 module ProsemirrorToHtml
   module Nodes
     class Blockquote < Node
-      def matching
-        @node.type == 'blockquote'
-      end
-
-      def tag
-        'blockquote'
-      end
+      @node_type = 'blockquote'
+      @tag_name = 'blockquote'
     end
   end
 end

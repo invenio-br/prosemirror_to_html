@@ -1,13 +1,8 @@
 module ProsemirrorToHtml
   module Nodes
     class Paragraph < Node
-      def matching
-        @node.type == 'paragraph'
-      end
-
-      def tag
-        'p'
-      end
+      @node_type = 'paragraph'
+      @tag_name = 'p'
     end
   end
 end

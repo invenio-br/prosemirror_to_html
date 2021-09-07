@@ -1,23 +1,29 @@
 module ProsemirrorToHtml
   module Nodes
     class Node
-      attr_writer :wrapper
-      attr_writer :type
+      @node_type = nil
+      @tag_name = nil
 
-      def type
-        @type || 'node'
+      class << self
+        attr_reader :node_type, :tag_name
       end
 
-      def initialize(data)
-        @node = data
+      def initialize(node)
+        @node = node
       end
 
       def matching
+        return @node.type == self.class.node_type if @node.type
+
+        false
+      end
+
+      def self_closing
         false
       end
 
       def tag
-        nil
+        self.class.tag_name
       end
 
       def text

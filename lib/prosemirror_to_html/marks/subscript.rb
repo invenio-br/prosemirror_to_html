@@ -1,13 +1,8 @@
 module ProsemirrorToHtml
   module Marks
     class Subscript < Mark
-      def matching
-        @node.type == 'subscript'
-      end
-
-      def tag
-        'sub'
-      end
+      @mark_type = 'subscript'
+      @tag_name = 'sub'
     end
   end
 end

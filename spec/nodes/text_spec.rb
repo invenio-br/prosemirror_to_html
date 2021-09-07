@@ -1,4 +1,4 @@
-RSpec.describe ProsemirrorToHtml::Nodes::Text do
+RSpec.describe ProsemirrorToHtml::Nodes do
   it 'escapes scripts' do
     json = {
       type: 'doc',

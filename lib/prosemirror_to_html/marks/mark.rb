@@ -1,24 +1,26 @@
 module ProsemirrorToHtml
   module Marks
     class Mark
-      attr_writer :type
+      @mark_type = nil
+      @tag_name = nil
 
-      def type
-        @type || 'mark'
+      class << self
+        attr_reader :mark_type, :tag_name
       end
 
-      def initialize(data)
-        @node = data
+      def initialize(mark)
+        @mark = mark
       end
 
       def matching
+        return @mark.type == self.class.mark_type if @mark.type
+
         false
       end
 
       def tag
-        nil
+        self.class.tag_name
       end
-      
     end
   end
 end

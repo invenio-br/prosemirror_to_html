@@ -1,9 +1,7 @@
 module ProsemirrorToHtml
   module Nodes
     class Heading < Node
-      def matching
-        @node.type == 'heading'
-      end
+      @node_type = 'heading'
 
       def tag
         "h#{@node.attrs.level}"

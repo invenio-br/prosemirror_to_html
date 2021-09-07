@@ -1,13 +1,8 @@
 module ProsemirrorToHtml
   module Nodes
     class TableRow < Node
-      def matching
-        @node.type == 'table_row'
-      end
-
-      def tag
-        'tr'
-      end
+      @node_type = 'table_row'
+      @tag_name = 'tr'
     end
   end
 end

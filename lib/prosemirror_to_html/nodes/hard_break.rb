@@ -1,12 +1,11 @@
 module ProsemirrorToHtml
   module Nodes
     class HardBreak < Node
-      def matching
-        @node.type == 'hard_break'
-      end
+      @node_type = 'hard_break'
+      @tag_name = 'br'
 
-      def tag
-        'br'
+      def self_closing
+        true
       end
     end
   end

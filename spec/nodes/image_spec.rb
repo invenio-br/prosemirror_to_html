@@ -8,7 +8,7 @@ RSpec.describe ProsemirrorToHtml::Nodes::Image do
           attrs: {
             alt: 'an image',
             src: 'image/source',
-            title: 'The image titele',
+            title: 'The image title',
           }
         }
       ]

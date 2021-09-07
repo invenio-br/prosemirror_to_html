@@ -1,13 +1,8 @@
 module ProsemirrorToHtml
   module Marks
     class Underline < Mark
-      def matching
-        @node.type == 'underline'
-      end
-
-      def tag
-        'u'
-      end
+      @mark_type = 'underline'
+      @tag_name = 'u'
     end
   end
 end

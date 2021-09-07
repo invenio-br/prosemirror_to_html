@@ -1,13 +1,8 @@
 module ProsemirrorToHtml
   module Nodes
     class HorizontalRule < Node
-      def matching
-        @node.type == 'hr'
-      end
-
-      def tag
-        'hr'
-      end
+      @node_type = 'horizontal_rule'
+      @tag_name = 'hr'
 
       def self_closing
         true

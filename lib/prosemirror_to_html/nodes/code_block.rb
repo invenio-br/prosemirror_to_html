@@ -1,13 +1,8 @@
 module ProsemirrorToHtml
   module Nodes
     class CodeBlock < Node
-      def matching
-        @node.type == 'code_block'
-      end
-
-      def tag
-        'code'
-      end
+      @node_type = 'code_block'
+      @tag_name = ['pre', 'code']
     end
   end
 end

@@ -1,13 +1,8 @@
 module ProsemirrorToHtml
   module Nodes
     class ListItem < Node
-      def matching
-        @node.type == 'list_item'
-      end
-
-      def tag
-        'li'
-      end
+      @node_type = 'list_item'
+      @tag_name = 'li'
     end
   end
 end

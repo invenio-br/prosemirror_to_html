@@ -4,7 +4,14 @@ module ProsemirrorToHtml
       @node_type = 'table_header'
       @tag_name = 'th'
 
-      # TODO: support attrs
+      def tag
+        [
+          {
+            tag: self.class.tag_name,
+            attrs: @node.attrs
+          }
+        ]
+      end
     end
   end
 end

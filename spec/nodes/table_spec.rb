@@ -27,7 +27,6 @@ RSpec.describe ProsemirrorToHtml::Nodes::Table do
                   type: 'table_header',
                   attrs: {
                     colspan: 2,
-                    colwidth: [100, 0],
                   },
                   content: [
                     {
@@ -140,7 +139,7 @@ RSpec.describe ProsemirrorToHtml::Nodes::Table do
       ],
     }
 
-    html = '<table><tbody><tr><th><p>text in header cell</p></th><th colspan="2" data-colwidth="100,0"><p>text in header cell with colspan 2</p></th></tr><tr><td rowspan="2"><p>paragraph 1 in cell with rowspan 2</p><p>paragraph 2 in cell with rowspan 2</p></td><td><p>foo</p></td><td><p>bar</p></td></tr><tr><td><p>foo</p></td><td><p>bar</p></td></tr></tbody></table>'
+    html = '<table><tbody><tr><th><p>text in header cell</p></th><th colspan="2"><p>text in header cell with colspan 2</p></th></tr><tr><td rowspan="2"><p>paragraph 1 in cell with rowspan 2</p><p>paragraph 2 in cell with rowspan 2</p></td><td><p>foo</p></td><td><p>bar</p></td></tr><tr><td><p>foo</p></td><td><p>bar</p></td></tr></tbody></table>'
 
     renderer = ProsemirrorToHtml::Renderer.new
     expect(renderer.render(json)).to eq html

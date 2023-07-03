@@ -6,12 +6,12 @@ require "prosemirror_to_html/version"
 Gem::Specification.new do |spec|
   spec.name          = "prosemirror_to_html"
   spec.version       = ProsemirrorToHtml::VERSION
-  spec.authors       = ["Brian Kimball"]
-  spec.email         = ["bvkimball@gmail.com"]
+  spec.authors       = ["Hans Lemuet", "Brian Kimball"]
+  spec.email         = ["hans@etamin.studio", "bvkimball@gmail.com"]
 
   spec.summary       = %q{Takes ProseMirror compatible JSON and outputs HTML.}
   spec.description   = %q{Takes ProseMirror compatible JSON and outputs HTML.}
-  spec.homepage      = "https://github.com/inputhq/prosemirror_to_html"
+  spec.homepage      = "https://github.com/etaminstudio/prosemirror_to_html"
   spec.license       = "MIT"
 
 

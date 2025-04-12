@@ -4,20 +4,13 @@ module ProsemirrorToHtml
       @node_type = 'code_block'
       @tag_name = ['pre', 'code']
 
-      def matching
-        @node['type'] == 'code_block'
-      end
-
       def tag
         language = @node.dig('attrs', 'language')
-        if language
-          [
-            { tag: 'pre' },
-            { tag: 'code', attrs: { class: "language-#{language}" } }
-          ]
-        else
-          ['pre', 'code']
-        end
+        tags = [ { tag: "div", attrs: { "data-controller" => "code-highlight" } } ]
+        tags << { tag: "pre" }
+        tags << { tag: "code", attrs: { class: "language-#{language}" } } if language
+        tags << { tag: "code" } unless language
+        tags
       end
     end
   end
